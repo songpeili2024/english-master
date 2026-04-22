@@ -1,0 +1,546 @@
+# English Master - 界面布局 (KV Language)
+
+# ─── 通用样式 ───────────────────────────────────────────────
+<CardStyle@MDCard>:
+    elevation: 3
+    padding: 16
+    radius: 16
+
+# ─── 欢迎页 ───────────────────────────────────────────────
+<WelcomeScreen>:
+    name: "welcome"
+    MDFloatLayout:
+        md_bg_color: 0.96, 0.96, 0.98, 1
+
+        MDLabel:
+            text: "🌟 English Master"
+            font_style: "H3"
+            bold: True
+            pos_hint: {"center_x": .5, "center_y": .72}
+            halign: "center"
+            color: 0.18, 0.53, 0.82, 1
+
+        MDLabel:
+            text: "口语翻译 · 间隔重复 · 智能难度"
+            font_style: "Body1"
+            pos_hint: {"center_x": .5, "center_y": .62}
+            halign: "center"
+            color: 0.5, 0.5, 0.5, 1
+
+        Image:
+            source: ""
+            size_hint: None, None
+            size: 120, 120
+            pos_hint: {"center_x": .5, "center_y": .45}
+            allow_stretch: True
+            # 备用：彩色圆形图标区域
+            canvas.before:
+                Color:
+                    rgba: 0.18, 0.53, 0.82, 0.15
+                Ellipse:
+                    pos: self.pos
+                    size: self.size
+
+        MDLabel:
+            text: "✦  科学的间隔重复算法\n✦  地道电影/教材原句\n✦  动态难度调整"
+            font_style: "Body1"
+            pos_hint: {"center_x": .5, "center_y": .28}
+            halign: "center"
+            color: 0.35, 0.35, 0.35, 1
+            line_height: 1.8
+
+        MDRaisedButton:
+            text: "开始学习  →"
+            font_size: "18sp"
+            size_hint: .75, None
+            height: "56dp"
+            pos_hint: {"center_x": .5, "center_y": .12}
+            md_bg_color: 0.18, 0.53, 0.82, 1
+            on_release: root.go_setup()
+
+
+# ─── 设置向导页 ──────────────────────────────────────────────
+<SetupScreen>:
+    name: "setup"
+
+    MDBoxLayout:
+        orientation: "vertical"
+        md_bg_color: 0.96, 0.96, 0.98, 1
+        padding: 16
+
+        # 顶部标题栏
+        MDBoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: "56dp"
+
+            MDIconButton:
+                icon: "arrow-left"
+                on_release: root.prev_step()
+
+            MDLabel:
+                text: "设置向导"
+                font_style: "H6"
+                valign: "center"
+
+            MDLabel:
+                text: f"{root.step} / 3"
+                font_style: "Body1"
+                valign: "center"
+                halign: "right"
+                color: 0.5, 0.5, 0.5, 1
+
+        # 进度条
+        MDProgressBar:
+            value: root.step / 3 * 100
+            size_hint_y: None
+            height: 4
+
+        # 步骤容器（滚动区域）
+        ScrollView:
+            id: scroll
+            size_hint_y: 1
+            do_scroll_x: False
+
+            MDBoxLayout:
+                id: setup_container
+                orientation: "vertical"
+                spacing: 15
+                padding: 8
+                size_hint_y: None
+                adaptive_height: True
+
+        # 底部按钮
+        MDBoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: "60dp"
+            spacing: 12
+            padding: [8, 8, 8, 8]
+
+            MDRaisedButton:
+                text: "下一步 →"
+                size_hint: 1, None
+                height: "50dp"
+                md_bg_color: 0.18, 0.53, 0.82, 1
+                on_release: root.next_step()
+
+
+# ─── 练习页 ─────────────────────────────────────────────────
+<PracticeScreen>:
+    name: "practice"
+
+    MDBoxLayout:
+        orientation: "vertical"
+        md_bg_color: 0.96, 0.96, 0.98, 1
+
+        # 顶部栏
+        MDBoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: "56dp"
+            padding: [16, 0]
+            md_bg_color: 0.18, 0.53, 0.82, 1
+
+            MDIconButton:
+                icon: "chart-bar"
+                user_font_size: "24sp"
+                icon_color: 1, 1, 1, 1
+                on_release: app.switch_screen("stats")
+
+            MDLabel:
+                text: "English Master"
+                font_style: "Subtitle1"
+                bold: True
+                text_color: 1, 1, 1, 1
+                valign: "center"
+
+            MDIconButton:
+                icon: "book-open-variant"
+                user_font_size: "24sp"
+                icon_color: 1, 1, 1, 1
+                on_release: app.switch_screen("words")
+
+        # 进度信息
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint_y: None
+            padding: 16, 8
+            spacing: 4
+
+            MDLabel:
+                id: progress_label
+                text: "句子 1 / 10"
+                font_style: "Body2"
+                color: 0.5, 0.5, 0.5, 1
+
+            MDProgressBar:
+                id: progress_bar
+                value: 10
+                size_hint_y: None
+                height: 6
+                color: 0.18, 0.53, 0.82, 1
+
+        # 句子来源标签
+        MDLabel:
+            id: source_label
+            text: "来源: 老友记 S1  |  等级 1"
+            font_style: "Caption"
+            color: 0.6, 0.6, 0.6, 1
+            size_hint_y: None
+            height: 30
+            padding: [16, 0]
+            valign: "middle"
+
+        # 句子卡片
+        MDCard:
+            id: sentence_card
+            size_hint: .92, None
+            height: "140dp"
+            pos_hint: {"center_x": .5}
+            elevation: 4
+            padding: 20
+            radius: 16
+            md_bg_color: 1, 1, 1, 1
+
+            MDLabel:
+                id: chinese_label
+                text: ""
+                font_style: "H5"
+                bold: True
+                color: 0.15, 0.15, 0.15, 1
+                halign: "center"
+                valign: "middle"
+                text_size: self.width, None
+
+        # 输入区
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint_y: None
+            padding: 16, 8
+            spacing: 10
+
+            MDLabel:
+                text: "请将句子翻译成英文："
+                font_style: "Body2"
+                color: 0.4, 0.4, 0.4, 1
+                size_hint_y: None
+                height: 24
+
+            MDTextField:
+                id: input_field
+                hint_text: "输入你的翻译..."
+                mode: "rectangle"
+                size_hint_y: None
+                height: "52dp"
+                font_size: "16sp"
+                multiline: False
+                on_text_validate: root.submit_translation()
+
+            MDRaisedButton:
+                id: submit_btn
+                text: "提交翻译  ✓"
+                size_hint_y: None
+                height: "50dp"
+                md_bg_color: 0.18, 0.53, 0.82, 1
+                on_release: root.submit_translation()
+
+        # 反馈区域
+        MDCard:
+            id: feedback_box
+            opacity: 0
+            size_hint: .92, None
+            height: 0
+            pos_hint: {"center_x": .5}
+            elevation: 2
+            padding: 16
+            radius: 12
+            md_bg_color: 1, 1, 1, 1
+
+        Widget:
+            size_hint_y: .1  # 弹性空间
+
+        # 底部操作栏
+        MDBoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: "60dp"
+            padding: 12, 8
+            spacing: 8
+            md_bg_color: 1, 1, 1, 1
+
+            MDRaisedButton:
+                text: "跳过 →"
+                size_hint: 1, None
+                height: "48dp"
+                md_bg_color: 0.75, 0.75, 0.75, 1
+                text_color: 0.3, 0.3, 0.3, 1
+                on_release: root.skip()
+
+            MDRaisedButton:
+                text: "下一题 →"
+                size_hint: 1.5, None
+                height: "48dp"
+                md_bg_color: 0.18, 0.53, 0.82, 1
+                on_release: root.next_sentence()
+
+            MDRaisedButton:
+                text: "📊 统计"
+                size_hint: 1, None
+                height: "48dp"
+                md_bg_color: 0.3, 0.3, 0.3, 1
+                on_release: app.switch_screen("stats")
+
+
+# ─── 完成页 ─────────────────────────────────────────────────
+<CompleteScreen>:
+    name: "complete"
+
+    MDBoxLayout:
+        orientation: "vertical"
+        md_bg_color: 0.96, 0.96, 0.98, 1
+        spacing: 20
+        padding: 24
+
+        Widget:
+            size_hint_y: .2
+
+        MDLabel:
+            text: "🎉"
+            font_size: "72sp"
+            halign: "center"
+            size_hint_y: None
+            height: 100
+
+        MDLabel:
+            id: stats_label
+            text: "今日练习完成！"
+            font_style: "H5"
+            halign: "center"
+            color: 0.15, 0.15, 0.15, 1
+
+        MDLabel:
+            id: word_label
+            text: ""
+            font_style: "Body1"
+            halign: "center"
+            color: 0.5, 0.5, 0.5, 1
+
+        Widget:
+            size_hint_y: .3
+
+        MDRaisedButton:
+            text: "继续练习  →"
+            size_hint: .8, None
+            height: "56dp"
+            pos_hint: {"center_x": .5}
+            md_bg_color: 0.18, 0.53, 0.82, 1
+            on_release: app.switch_screen("practice")
+
+        MDRaisedButton:
+            text: "📚 单词库"
+            size_hint: .6, None
+            height: "48dp"
+            pos_hint: {"center_x": .5}
+            md_bg_color: 0.3, 0.6, 0.3, 1
+            on_release: app.switch_screen("words")
+
+        MDRaisedButton:
+            text: "📊 统计"
+            size_hint: .6, None
+            height: "48dp"
+            pos_hint: {"center_x": .5}
+            md_bg_color: 0.3, 0.3, 0.3, 1
+            on_release: app.switch_screen("stats")
+
+
+# ─── 统计页 ─────────────────────────────────────────────────
+<StatsScreen>:
+    name: "stats"
+
+    MDBoxLayout:
+        orientation: "vertical"
+        md_bg_color: 0.96, 0.96, 0.98, 1
+
+        # 顶部栏
+        MDBoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: "56dp"
+            padding: [8, 0]
+            md_bg_color: 0.18, 0.53, 0.82, 1
+
+            MDIconButton:
+                icon: "arrow-left"
+                icon_color: 1, 1, 1, 1
+                on_release: app.switch_screen("practice")
+
+            MDLabel:
+                text: "学习统计"
+                font_style: "H6"
+                text_color: 1, 1, 1, 1
+                valign: "center"
+
+        ScrollView:
+            do_scroll_x: False
+            size_hint_y: 1
+
+            MDBoxLayout:
+                orientation: "vertical"
+                spacing: 16
+                padding: 16
+                size_hint_y: None
+                adaptive_height: True
+
+                # 等级和连续天数
+                MDCard:
+                    padding: 20
+                    radius: 16
+                    md_bg_color: 1, 1, 1, 1
+
+                    MDLabel:
+                        id: stats_title
+                        text: "等级 1  ·  🔥 0 天连击"
+                        font_style: "H6"
+                        halign: "center"
+
+                # 正确率
+                MDCard:
+                    padding: 16
+                    radius: 16
+                    md_bg_color: 1, 1, 1, 1
+
+                    MDLabel:
+                        text: "正确率"
+                        font_style: "Subtitle1"
+                        color: 0.5, 0.5, 0.5, 1
+
+                    MDLabel:
+                        id: accuracy_label
+                        text: "0%"
+                        font_style: "H4"
+                        bold: True
+                        color: 0.18, 0.53, 0.82, 1
+                        size_hint_y: None
+                        height: 50
+
+                    MDProgressBar:
+                        id: accuracy_bar
+                        value: 0
+                        size_hint_y: None
+                        height: 10
+                        color: 0.18, 0.53, 0.82, 1
+
+                # 句子统计
+                MDCard:
+                    padding: 16
+                    radius: 16
+                    md_bg_color: 1, 1, 1, 1
+
+                    MDLabel:
+                        text: "📝 句子练习"
+                        font_style: "Subtitle1"
+                        bold: True
+
+                    MDLabel:
+                        id: sentence_stats
+                        text: ""
+                        font_style: "Body1"
+                        color: 0.35, 0.35, 0.35, 1
+
+                # 单词统计
+                MDCard:
+                    padding: 16
+                    radius: 16
+                    md_bg_color: 1, 1, 1, 1
+
+                    MDLabel:
+                        text: "📚 单词库"
+                        font_style: "Subtitle1"
+                        bold: True
+
+                    MDLabel:
+                        id: word_stats
+                        text: ""
+                        font_style: "Body1"
+                        color: 0.35, 0.35, 0.35, 1
+
+                # 历史记录
+                MDCard:
+                    padding: 16
+                    radius: 16
+                    md_bg_color: 1, 1, 1, 1
+
+                    MDLabel:
+                        text: "📋 最近记录"
+                        font_style: "Subtitle1"
+                        bold: True
+                        size_hint_y: None
+                        height: 30
+
+                    MDList:
+                        id: history_list
+                        size_hint_y: None
+                        adaptive_height: True
+
+                # 返回按钮
+                MDRaisedButton:
+                    text: "← 返回练习"
+                    size_hint_y: None
+                    height: "50dp"
+                    md_bg_color: 0.18, 0.53, 0.82, 1
+                    on_release: app.switch_screen("practice")
+
+
+# ─── 单词库页 ───────────────────────────────────────────────
+<WordLibraryScreen>:
+    name: "words"
+
+    MDBoxLayout:
+        orientation: "vertical"
+        md_bg_color: 0.96, 0.96, 0.98, 1
+
+        # 顶部栏
+        MDBoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: "56dp"
+            padding: [8, 0]
+            md_bg_color: 0.3, 0.6, 0.3, 1
+
+            MDIconButton:
+                icon: "arrow-left"
+                icon_color: 1, 1, 1, 1
+                on_release: app.switch_screen("practice")
+
+            MDLabel:
+                text: "单词库"
+                font_style: "H6"
+                text_color: 1, 1, 1, 1
+                valign: "center"
+
+            MDIconButton:
+                icon: "refresh"
+                icon_color: 1, 1, 1, 1
+                on_release: root.refresh()
+
+        # 统计栏
+        MDLabel:
+            id: word_count_label
+            text: "共 0 词  |  0 待复习"
+            font_style: "Body2"
+            color: 0.5, 0.5, 0.5, 1
+            size_hint_y: None
+            height: 30
+            padding: [16, 0]
+
+        # 单词列表
+        ScrollView:
+            do_scroll_x: False
+            size_hint_y: 1
+
+            MDList:
+                id: word_list
+                size_hint_y: None
+                adaptive_height: True
+                padding: 8
