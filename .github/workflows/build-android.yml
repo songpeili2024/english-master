@@ -23,7 +23,18 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y python3-pip python3-venv git zip unzip openjdk-17-jdk autoconf automake libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo6 cmake libffi-dev libssl-dev
-          pip3 install --user buildozer cython
+          pip3 install --user buildozer==1.6.0 cython
+
+      - name: Patch p4a libffi recipe
+        run: |
+          # Install p4a to patch its libffi recipe before build
+          export PATH=$PATH:~/.local/bin
+          pip3 install --user python-for-android==2024.7.16
+          # Find and patch the libffi recipe's configure.ac template
+          P4A_DIR=$(python3 -c "import p4a; print(p4a.__file__.rsplit('/',1)[0])" 2>/dev/null || echo "$HOME/.local/lib/python3.10/site-packages/pythonforandroid")
+          echo "p4a dir: $P4A_DIR"
+          find "$P4A_DIR" -name "configure.ac" -path "*/libffi/*" 2>/dev/null
+          find "$P4A_DIR" -name "configure.ac" -path "*/libffi/*" -exec sed -i 's/LT_SYS_SYMBOL_USCORE/m4_ifdef([LT_SYS_SYMBOL_USCORE], [LT_SYS_SYMBOL_USCORE])/g' {} \; 2>/dev/null || echo "No libffi configure.ac found to patch"
 
       - name: Build APK with buildozer
         run: |
