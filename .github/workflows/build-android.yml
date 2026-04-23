@@ -10,17 +10,27 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: kivy/buildozer:latest
-    env:
-      BUILDOZER_ALLOW_ROOT: 1
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build APK with buildozer
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install system dependencies
         run: |
-          buildozer android debug
+          sudo apt-get update
+          sudo apt-get install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev libltdl-dev
+
+      - name: Install buildozer
+        run: pip install buildozer
+
+      - name: Build APK with buildozer
+        run: buildozer android debug
+        env:
+          BUILDOZER_ANDROID_SKIP_UPDATE: '1'
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
