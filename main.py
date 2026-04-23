@@ -1,4 +1,4 @@
-"""
+﻿"""
 English Master - 简化版（纯 Python UI）
 英语口语翻译练习应用
 """
@@ -30,25 +30,25 @@ import sys
 import os
 
 def _get_chinese_font():
-    """自动检测平台并返回可用的中文字体路径"""
-    # Android: 字体打包在 assets/fonts/ 或系统字体
+    """获取中文字体路径，确保跨平台兼容"""
+    # Android: 使用系统字体
     if 'ANDROID_ARGUMENT' in os.environ or hasattr(sys, '_MEIPASS'):
-        # p4a 打包后，字体在 app 内部
-        font_paths = [
-            './fonts/NotoSansSC-Regular.ttf',
+        system_fonts = [
             '/system/fonts/NotoSansCJK-Regular.ttc',
+            '/system/fonts/NotoSerifCJK-Regular.ttc',
             '/system/fonts/DroidSansFallbackFull.ttf',
-            './assets/fonts/NotoSansSC-Regular.ttf',
+            '/system/fonts/DroidSansFallback.ttf',
         ]
-        for fp in font_paths:
+        for fp in system_fonts:
             if os.path.exists(fp):
                 return fp
-        return './fonts/NotoSansSC-Regular.ttf'  # fallback
+        return ''
     
     # Windows
     elif sys.platform == 'win32':
         win_fonts = [
-            'C:/Windows/Fonts/msyh.ttc',      # 微软雅黑
+            'C:/Windows/Fonts/msyh.ttc',
+            'C:/Windows/Fonts/simsun.ttc',
         ]
         for fp in win_fonts:
             if os.path.exists(fp):
@@ -75,13 +75,11 @@ def _get_chinese_font():
             if os.path.exists(fp):
                 return fp
     
-    # 最终 fallback - 返回空字符串，使用 Kivy 默认字体
     return ''
 
 CHINESE_FONT = _get_chinese_font()
 
-# 注册字体到 Kivy（如果找到了字体文件）
-if CHINESE_FONT and os.path.exists(CHINESE_FONT):
+if CHINESE_FONT:
     try:
         LabelBase.register(name='ChineseFont', fn_regular=CHINESE_FONT)
         CHINESE_FONT = 'ChineseFont'
@@ -190,7 +188,7 @@ class WelcomeScreen(MDScreen):
             size_hint_y=None,
             height=80,
             color=(0.18, 0.53, 0.82, 1),
-            font_name=CHINESE_FONT
+            font_name=(CHINESE_FONT if CHINESE_FONT else "Roboto")
         )
         layout.add_widget(title)
         
@@ -202,7 +200,7 @@ class WelcomeScreen(MDScreen):
             size_hint_y=None,
             height=40,
             color=(0.4, 0.4, 0.4, 1),
-            font_name=CHINESE_FONT
+            font_name=(CHINESE_FONT if CHINESE_FONT else "Roboto")
         )
         layout.add_widget(subtitle)
         
@@ -217,7 +215,7 @@ class WelcomeScreen(MDScreen):
             size_hint_y=None,
             height=100,
             color=(0.4, 0.4, 0.4, 1),
-            font_name=CHINESE_FONT
+            font_name=(CHINESE_FONT if CHINESE_FONT else "Roboto")
         )
         layout.add_widget(desc)
         
@@ -233,7 +231,7 @@ class WelcomeScreen(MDScreen):
             background_color=(0.18, 0.53, 0.82, 1),
             color=(1, 1, 1, 1),
             pos_hint={"center_x": 0.5},
-            font_name=CHINESE_FONT
+            font_name=(CHINESE_FONT if CHINESE_FONT else "Roboto")
         )
         btn.bind(on_release=self.go_practice)
         layout.add_widget(btn)
@@ -278,7 +276,7 @@ class PracticeScreen(MDScreen):
             size_hint_y=None,
             height=30,
             color=(0.4, 0.4, 0.4, 1),
-            font_name=CHINESE_FONT
+            font_name=(CHINESE_FONT if CHINESE_FONT else "Roboto")
         )
         self.layout.add_widget(self.progress_label)
         
@@ -308,7 +306,7 @@ class PracticeScreen(MDScreen):
             halign="center",
             valign="middle",
             color=(0.1, 0.1, 0.1, 1),
-            font_name=CHINESE_FONT,
+            font_name=(CHINESE_FONT if CHINESE_FONT else "Roboto"),
             pos_hint={"center_x": 0.5, "center_y": 0.5}
         )
         card.add_widget(self.chinese_label)
@@ -321,7 +319,7 @@ class PracticeScreen(MDScreen):
             size_hint_y=None,
             height=30,
             color=(0.4, 0.4, 0.4, 1),
-            font_name=CHINESE_FONT
+            font_name=(CHINESE_FONT if CHINESE_FONT else "Roboto")
         ))
         
         # 输入框
@@ -331,7 +329,7 @@ class PracticeScreen(MDScreen):
             height=52,
             font_size="16sp",
             multiline=False,
-            font_name=CHINESE_FONT,
+            font_name=(CHINESE_FONT if CHINESE_FONT else "Roboto"),
             background_color=(1, 1, 1, 1),
             foreground_color=(0.1, 0.1, 0.1, 1)
         )
@@ -345,7 +343,7 @@ class PracticeScreen(MDScreen):
             height=50,
             background_color=(0.18, 0.53, 0.82, 1),
             color=(1, 1, 1, 1),
-            font_name=CHINESE_FONT
+            font_name=(CHINESE_FONT if CHINESE_FONT else "Roboto")
         )
         submit_btn.bind(on_release=self.submit)
         self.layout.add_widget(submit_btn)
@@ -358,7 +356,7 @@ class PracticeScreen(MDScreen):
             size_hint_y=None,
             height=80,
             color=(0.4, 0.4, 0.4, 1),
-            font_name=CHINESE_FONT
+            font_name=(CHINESE_FONT if CHINESE_FONT else "Roboto")
         )
         self.layout.add_widget(self.feedback_label)
         
@@ -370,7 +368,7 @@ class PracticeScreen(MDScreen):
             background_color=(0.18, 0.53, 0.82, 1),
             color=(1, 1, 1, 1),
             pos_hint={"center_x": 0.5},
-            font_name=CHINESE_FONT
+            font_name=(CHINESE_FONT if CHINESE_FONT else "Roboto")
         )
         next_btn.bind(on_release=self.next_sentence)
         self.layout.add_widget(next_btn)
@@ -460,7 +458,7 @@ class CompleteScreen(MDScreen):
             halign="center",
             size_hint_y=None,
             height=100,
-            font_name=CHINESE_FONT
+            font_name=(CHINESE_FONT if CHINESE_FONT else "Roboto")
         ))
         
         # 统计标签
@@ -471,7 +469,7 @@ class CompleteScreen(MDScreen):
             size_hint_y=None,
             height=60,
             color=(0.1, 0.1, 0.1, 1),
-            font_name=CHINESE_FONT
+            font_name=(CHINESE_FONT if CHINESE_FONT else "Roboto")
         )
         layout.add_widget(self.stats_label)
         
@@ -486,7 +484,7 @@ class CompleteScreen(MDScreen):
             background_color=(0.18, 0.53, 0.82, 1),
             color=(1, 1, 1, 1),
             pos_hint={"center_x": 0.5},
-            font_name=CHINESE_FONT
+            font_name=(CHINESE_FONT if CHINESE_FONT else "Roboto")
         )
         continue_btn.bind(on_release=self.continue_practice)
         layout.add_widget(continue_btn)
@@ -499,7 +497,7 @@ class CompleteScreen(MDScreen):
             background_color=(0.3, 0.3, 0.3, 1),
             color=(1, 1, 1, 1),
             pos_hint={"center_x": 0.5},
-            font_name=CHINESE_FONT
+            font_name=(CHINESE_FONT if CHINESE_FONT else "Roboto")
         )
         stats_btn.bind(on_release=self.go_stats)
         layout.add_widget(stats_btn)
@@ -548,7 +546,7 @@ class StatsScreen(MDScreen):
             size_hint_y=None,
             height=60,
             color=(0.18, 0.53, 0.82, 1),
-            font_name=CHINESE_FONT
+            font_name=(CHINESE_FONT if CHINESE_FONT else "Roboto")
         ))
         
         # 统计卡片
@@ -565,7 +563,7 @@ class StatsScreen(MDScreen):
             halign="left",
             valign="top",
             color=(0.1, 0.1, 0.1, 1),
-            font_name=CHINESE_FONT,
+            font_name=(CHINESE_FONT if CHINESE_FONT else "Roboto"),
             pos_hint={"center_x": 0.5, "center_y": 0.5}
         )
         card.add_widget(self.stats_label)
@@ -582,7 +580,7 @@ class StatsScreen(MDScreen):
             background_color=(0.18, 0.53, 0.82, 1),
             color=(1, 1, 1, 1),
             pos_hint={"center_x": 0.5},
-            font_name=CHINESE_FONT
+            font_name=(CHINESE_FONT if CHINESE_FONT else "Roboto")
         )
         back_btn.bind(on_release=lambda x: self.go_back())
         layout.add_widget(back_btn)
