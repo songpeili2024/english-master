@@ -17,9 +17,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build APK with buildozer
-        run: buildozer android debug
+        run: echo y | buildozer android debug
         env:
-          BUILDOZER_ALLOW_ROOT: '1'
           BUILDOZER_ANDROID_SKIP_UPDATE: '1'
 
       - name: Upload APK
