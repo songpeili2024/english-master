@@ -70,7 +70,6 @@ android.manifest_rules =
 android.gradle_dependencies =
 
 # (list) Java/JAR additions
-android.add_jars =
 
 # (list) Java class additions
 android.add_src =
