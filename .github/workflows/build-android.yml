@@ -21,9 +21,9 @@ jobs:
           pip install cython
 
       - name: Build APK with buildozer
-        run: rm -rf .buildozer
-        rm -rf .buildozer
-        echo y | CFLAGS="-Wno-error" CPPFLAGS="-Wno-error" buildozer android debug
+        run: |
+          rm -rf .buildozer
+          echo y | CFLAGS="-Wno-error" CPPFLAGS="-Wno-error" buildozer android debug
         env:
           BUILDOZER_ANDROID_SKIP_UPDATE: '1'
 
