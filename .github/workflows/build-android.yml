@@ -16,6 +16,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install Cython (fix missing .c files from .pyx)
+        run: |
+          pip install cython
+
       - name: Build APK with buildozer
         run: echo y | buildozer android debug
         env:
