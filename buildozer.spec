@@ -1,4 +1,4 @@
-[app]
+﻿[app]
 
 # (str) Title of your application
 title = English Master
@@ -13,7 +13,7 @@ package.domain = com.englishmaster
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,json,ttf,ttf
+source.include_exts = py,png,jpg,kv,atlas,json,ttf,ttc,otf
 
 # (str) The version of your application
 version = 1.0.0
@@ -72,7 +72,7 @@ android.allow_backup = True
 # (list) Java class additions
 
 # (str) python-for-android branch to use
-p4a.branch = master
+p4a.branch = develop
 
 # (str) python-for-android bootstrap to use
 p4a.bootstrap = sdl2
