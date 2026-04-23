@@ -16,12 +16,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Cython (fix missing .c files from .pyx)
+      - name: Install Cython
         run: |
           pip install cython
 
       - name: Build APK with buildozer
-        run: echo y | buildozer android debug
+        run: echo y | CFLAGS="-Wno-error" CPPFLAGS="-Wno-error" buildozer android debug
         env:
           BUILDOZER_ANDROID_SKIP_UPDATE: '1'
 
