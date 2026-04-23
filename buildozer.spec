@@ -64,15 +64,12 @@ android.archs = arm64-v8a
 android.allow_backup = True
 
 # (str) XML formatting rules for the manifest file
-android.manifest_rules =
 
 # (list) Gradle dependencies
-android.gradle_dependencies =
 
 # (list) Java/JAR additions
 
 # (list) Java class additions
-android.add_src =
 
 # (str) python-for-android branch to use
 p4a.branch = master
