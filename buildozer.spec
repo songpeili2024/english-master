@@ -14,6 +14,7 @@ source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
 source.include_exts = py,png,jpg,kv,atlas,json,ttf,ttc,otf
+source.include_dirs = fonts
 
 # (str) The version of your application
 version = 1.0.0
